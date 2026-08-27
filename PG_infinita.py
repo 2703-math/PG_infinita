@@ -51,8 +51,13 @@ st.markdown("""
 def plot_barra_pg(n_passos):
     fig = go.Figure()
     
-    # Cores chamativas para cada pedaço da PG
-    cores = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e91e63', '#34495e', '#d35400', '#16a085']
+    # Paleta de cores estendida para suportar até 20 passos distintos
+    cores = [
+        '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', 
+        '#1abc9c', '#e91e63', '#34495e', '#d35400', '#16a085',
+        '#2980b9', '#27ae60', '#d63031', '#e84393', '#6c5ce7',
+        '#00b894', '#fdcb6e', '#e17055', '#0984e3', '#b2bec3'
+    ]
     
     pos_atual = 0.0
     soma_parcial = 0.0
@@ -63,33 +68,34 @@ def plot_barra_pg(n_passos):
         soma_parcial += tamanho
         cor = cores[i % len(cores)]
         
-        # Adiciona o retângulo representando o pedaço da PG
+        # Oculta o texto dentro da barra se o pedaço ficar pequeno demais para ler
+        texto_bloco = f"1/{2**(i+1)}" if i < 8 else ""
+        
         fig.add_trace(go.Bar(
             x=[tamanho],
             y=['Barra Total (Valor = 1)'],
             orientation='h',
             base=pos_atual,
-            marker=dict(color=cor, line=dict(color='white', width=1.5)),
-            text=f"1/{2**(i+1)}",
+            marker=dict(color=cor, line=dict(color='white', width=1)),
+            text=texto_bloco,
             textposition='inside',
             insidetextanchor='middle',
-            textfont=dict(color='white', size=13, family="Arial Black"),
-            hovertemplate=f"Passo {i+1}<br>Fração: 1/{2**(i+1)} ({tamanho:.4f})<br>Soma acumulada: {soma_parcial:.4f}<extra></extra>",
+            textfont=dict(color='white', size=11, family="Arial Black"),
+            hovertemplate=f"Passo {i+1}<br>Fração: 1/{2**(i+1)} ({tamanho:.6f})<br>Soma acumulada: {soma_parcial:.6f}<extra></extra>",
             showlegend=False
         ))
         pos_atual += tamanho
 
     # Espaço restante que falta para fechar o número 1
     falta = 1.0 - soma_parcial
-    if falta > 0.00001:
-        # CORREÇÃO AQUI: Removido o parâmetro 'dash' que causava incompatibilidade no go.Bar
+    if falta > 0.000001:
         fig.add_trace(go.Bar(
             x=[falta],
             y=['Barra Total (Valor = 1)'],
             orientation='h',
             base=pos_atual,
             marker=dict(color='#ecf0f1', line=dict(color='#bdc3c7', width=1)),
-            text=f"Falta ({falta:.3f})" if falta > 0.05 else "",
+            text="",
             textposition='inside',
             hoverinfo='skip',
             showlegend=False
@@ -114,7 +120,8 @@ st.markdown('<div class="subtitle">Como a soma de infinitas frações pode resul
 
 with st.sidebar:
     st.header("⚙️ Controles da Simulação")
-    n_passos = st.slider("Quantidade de divisões (Passos da PG)", 1, 10, 4, step=1)
+    # Aumentado para 20 passos possíveis
+    n_passos = st.slider("Quantidade de divisões (Passos da PG)", 1, 20, 5, step=1)
     st.markdown("---")
     st.markdown("""
     <div style="font-size: 0.9rem; color: #555;">
@@ -144,22 +151,18 @@ with col_graf:
     
     st.markdown(f"""
     <div style="text-align: center; font-size: 1.2rem; margin-top: 10px;">
-        Soma acumulada após <b>{n_passos}</b> passos: <b style="color: #27ae60;">{soma_atual:.6f}</b>
+        Soma acumulada após <b>{n_passos}</b> passos: <b style="color: #27ae60;">{soma_atual:.8f}</b>
     </div>
     """, unsafe_allow_html=True)
 
 with col_calc:
     st.subheader("🧮 A Matemática por Trás")
     
-    st.markdown("""
-    <div style="font-size: 1.05rem; line-height: 1.8;">
-        Fórmula da Soma Infinita:
-        $$ S = \\frac{a_1}{1 - q} $$
-        
-        Substituindo os valores ($a_1 = \\frac{1}{2}$ e $q = \\frac{1}{2}$):
-        $$ S = \\frac{\\frac{1}{2}}{1 - \\frac{1}{2}} = \\frac{\\frac{1}{2}}{\\frac{1}{2}} = \\mathbf{1} $$
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("Fórmula da Soma Infinita:")
+    st.latex(r"S = \frac{a_1}{1 - q}")
+    
+    st.markdown("Substituindo os valores ($a_1 = \\frac{1}{2}$ e $q = \\frac{1}{2}$):")
+    st.latex(r"S = \frac{\frac{1}{2}}{1 - \frac{1}{2}} = \frac{\frac{1}{2}}{\frac{1}{2}} = \mathbf{1}")
 
 st.markdown("---")
 
