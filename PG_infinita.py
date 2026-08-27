@@ -82,12 +82,13 @@ def plot_barra_pg(n_passos):
     # Espaço restante que falta para fechar o número 1
     falta = 1.0 - soma_parcial
     if falta > 0.00001:
+        # CORREÇÃO AQUI: Removido o parâmetro 'dash' que causava incompatibilidade no go.Bar
         fig.add_trace(go.Bar(
             x=[falta],
             y=['Barra Total (Valor = 1)'],
             orientation='h',
             base=pos_atual,
-            marker=dict(color='#ecf0f1', line=dict(color='#bdc3c7', width=1, dash='dot')),
+            marker=dict(color='#ecf0f1', line=dict(color='#bdc3c7', width=1)),
             text=f"Falta ({falta:.3f})" if falta > 0.05 else "",
             textposition='inside',
             hoverinfo='skip',
@@ -150,7 +151,6 @@ with col_graf:
 with col_calc:
     st.subheader("🧮 A Matemática por Trás")
     
-    # CORRIGIDO: Removido o 'f' do início da string para evitar conflito com as chaves do LaTeX
     st.markdown("""
     <div style="font-size: 1.05rem; line-height: 1.8;">
         Fórmula da Soma Infinita:
