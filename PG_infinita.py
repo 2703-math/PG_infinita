@@ -150,14 +150,14 @@ with col_graf:
 with col_calc:
     st.subheader("🧮 A Matemática por Trás")
     
-    # Cálculo da fórmula da PG infinita: S = a1 / (1 - q)
-    st.markdown(rf"""
+    # CORRIGIDO: Removido o 'f' do início da string para evitar conflito com as chaves do LaTeX
+    st.markdown("""
     <div style="font-size: 1.05rem; line-height: 1.8;">
         Fórmula da Soma Infinita:
-        $$ S = \frac{{a_1}}{{{1 - 0.5}} $$
+        $$ S = \\frac{a_1}{1 - q} $$
         
-        Substituindo os valores:
-        $$ S = \frac{{\frac{1}{2}}}{{1 - \frac{1}{2}}} = \frac{{\frac{1}{2}}}{{\frac{1}{2}}} = \mathbf{{1}} $$
+        Substituindo os valores ($a_1 = \\frac{1}{2}$ e $q = \\frac{1}{2}$):
+        $$ S = \\frac{\\frac{1}{2}}{1 - \\frac{1}{2}} = \\frac{\\frac{1}{2}}{\\frac{1}{2}} = \\mathbf{1} $$
     </div>
     """, unsafe_allow_html=True)
 
@@ -167,7 +167,6 @@ st.markdown("---")
 st.subheader("✨ E se quisermos que o resultado seja 2?")
 st.markdown("Basta mudar o primeiro termo! Se começarmos com **1**, e formos somando as metades ($1 + 1/2 + 1/4 + 1/8 + \dots$), a soma total fechará exatamente em **2**.")
 
-# Exemplo rápido com slider de a1
 col_ex1, col_ex2 = st.columns([1, 2])
 with col_ex1:
     a1_ex = st.slider("Escolha o 1º termo (a₁)", 0.5, 2.0, 1.0, step=0.5)
@@ -176,7 +175,7 @@ with col_ex1:
     st.markdown(f"**Soma Limite (Infinitita):** <span style='font-size: 1.4rem; color: #e74c3c;'><b>{soma_total_ex:.1f}</b></span> (Número Inteiro!)", unsafe_allow_html=True)
 
 with col_ex2:
-    st.markdown(f"""
+    st.markdown("""
     <div class="step-box">
         <b>Por que isso é fascinante para os alunos?</b><br>
         Isso quebra a intuição inicial de que <i>"somar infinitas coisas faz o número explodir para o infinito"</i>. 
